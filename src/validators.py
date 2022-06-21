@@ -11,7 +11,7 @@ class Validator(ABC, Generic[T]):
 
 class EmailValidator(Validator[str]):
     def valida(value: str) -> bool:
-        return bool(re.match('^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'), value)
+        return bool(re.match('^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$', value))
 
 class CPFValidator(Validator[str]):
     def valida(value: str) -> bool:
@@ -45,7 +45,7 @@ class CelularValidator(Validator[str]):
 class SenhaValidator(Validator[str]):
     def valida(value : str) -> bool:
         special_sym = ['$', '@', '#', '%']
-        valid = True
+
 
         if (len(value) < 6 or len(value) > 20)\
         and not any(char.isdigit() for char in value)\
