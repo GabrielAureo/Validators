@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Generic, TypeVar
 import re
 
+
 T = TypeVar("T")
 class Validator(ABC, Generic[T]):
     @abstractmethod
@@ -39,5 +40,18 @@ class CPFValidator(Validator[str]):
 
 class CelularValidator(Validator[str]):
     def valida(value: str) -> bool:
-        match = re.match()
+        return bool(re.match('^[1-9]{2}9[1-9][0-9]{3}[0-9]{4}$', value))
+
+class SenhaValidator(Validator[str]):
+    def valida(value : str) -> bool:
+        special_sym = ['$', '@', '#', '%']
+        valid = True
+
+        if (len(value) < 6 or len(value) > 20)\
+        and not any(char.isdigit() for char in value)\
+        and not any(char.isupper() for char in value)\
+        and not any(char.islower() for char in value)\
+        and not any(char in special_sym for char in value):
+            return False
+
 
