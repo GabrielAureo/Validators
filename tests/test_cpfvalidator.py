@@ -12,6 +12,9 @@ class TestCPF:
         assert not CPFValidator.valida("11111111111")
         assert not CPFValidator.valida("")
         assert not CPFValidator.valida("99999999999")
+        assert not CPFValidator.valida("246.248.520-93")
+        assert not CPFValidator.valida("palavra")
+        assert not CPFValidator.valida("48587864598645796564")
         assert not CPFValidator.valida("4564")
         
         
