@@ -11,12 +11,10 @@ class Validator(ABC, Generic[T]):
 
 class EmailValidator(Validator[str]):
     def valida(value: str) -> bool:
-        return bool(re.match('^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$', value))
+        return bool(re.match(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", value))
 
 class CPFValidator(Validator[str]):
     def valida(value: str) -> bool:
-        if not re.match(r'\d{3}\.\d{3}\.\d{3}-\d{2}', value):
-            return False
 
         numbers = [int(digit) for digit in value if digit.isdigit()]
 
@@ -46,12 +44,13 @@ class SenhaValidator(Validator[str]):
     def valida(value : str) -> bool:
         special_sym = ['$', '@', '#', '%']
 
-
         if (len(value) < 6 or len(value) > 20)\
-        and not any(char.isdigit() for char in value)\
-        and not any(char.isupper() for char in value)\
-        and not any(char.islower() for char in value)\
-        and not any(char in special_sym for char in value):
+        or not any(char.isdigit() for char in value)\
+        or not any(char.isupper() for char in value)\
+        or not any(char.islower() for char in value)\
+        or not any(char in special_sym for char in value):
             return False
+        
+        return True
 
 
