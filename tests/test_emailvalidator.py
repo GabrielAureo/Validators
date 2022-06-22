@@ -1,4 +1,4 @@
-from transfero_validators.validators import EmailValidator
+from src.transfero_validators.validators import EmailValidator
 
 class TestEmail:
     def test_ok_email(self):

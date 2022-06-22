@@ -1,4 +1,4 @@
-from transfero_validators.validators import SenhaValidator
+from src.transfero_validators.validators import SenhaValidator
 
 class TestSenha:
     def test_senha_ok(self):

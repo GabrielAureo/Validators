@@ -1,4 +1,4 @@
-from transfero_validators.validators import CPFValidator
+from src.transfero_validators.validators import CPFValidator
 
 class TestCPF:
     def test_cpf_valid(self):

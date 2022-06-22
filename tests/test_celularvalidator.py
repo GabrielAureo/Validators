@@ -1,4 +1,4 @@
-from transfero_validators.validators import CelularValidator
+from src.transfero_validators.validators import CelularValidator
 
 class TestCelular:
     def test_celular_ok(self):

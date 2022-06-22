@@ -1,13 +1,10 @@
 [build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
-
 [project]
 name = "transfero_validators"
 version = "0.0.1"
-authors = [
-  { name="Gabriel Aureo", email="gabrielaureo@gmail.com },
-]
+authors = [{ name="Gabriel Aureo", email="gabrielaureo@gmail.com" }]
 description = "A small CRUD validators package"
 readme = "README.md"
 requires-python = ">=3.7"
