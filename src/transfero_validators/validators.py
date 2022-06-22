@@ -4,16 +4,16 @@ import re
 
 
 T = TypeVar("T")
-class Validator(ABC, Generic[T]):
+class AbstractValidator(ABC, Generic[T]):
     @abstractmethod
     def valida(value : T) -> bool:
         pass
 
-class EmailValidator(Validator[str]):
+class EmailValidator(AbstractValidator[str]):
     def valida(value: str) -> bool:
         return bool(re.match(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", value))
 
-class CPFValidator(Validator[str]):
+class CPFValidator(AbstractValidator[str]):
     def valida(value: str) -> bool:
 
         numbers = [int(digit) for digit in value if digit.isdigit()]
@@ -36,11 +36,11 @@ class CPFValidator(Validator[str]):
 
         return True
 
-class CelularValidator(Validator[str]):
+class CelularValidator(AbstractValidator[str]):
     def valida(value: str) -> bool:
         return bool(re.match('^[1-9]{2}9[1-9][0-9]{3}[0-9]{4}$', value))
 
-class SenhaValidator(Validator[str]):
+class SenhaValidator(AbstractValidator[str]):
     def valida(value : str) -> bool:
         special_sym = ['$', '@', '#', '%']
 
