@@ -6,42 +6,52 @@ import re
 T = TypeVar("T")
 class AbstractValidator(ABC, Generic[T]):
     @abstractmethod
-    def valida(value : T) -> bool:
+    def valida(value : T, exception : Exception = None) -> bool:
         pass
 
+class StringVaziaValidator(AbstractValidator[str]):
+    def valida(value: T, exception: Exception = None) -> bool:
+        if(value == ""):
+            raise exception
+
 class EmailValidator(AbstractValidator[str]):
-    def valida(value: str) -> bool:
-        return bool(re.match(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", value))
+    def valida(value: str, exception: Exception = None) -> bool:
+        StringVaziaValidator.valida(value, exception=exception)
+        if bool(re.match(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", value)):
+            raise exception
 
 class CPFValidator(AbstractValidator[str]):
-    def valida(value: str) -> bool:
+    def valida(value: str, exception: Exception = None) -> bool:
+        StringVaziaValidator.valida(value, exception=exception)
+        numeros = [int(digit) for digit in value if digit.isdigit()]
 
-        numbers = [int(digit) for digit in value if digit.isdigit()]
+        if len(numeros) != 11:
+            raise exception
 
-        # Verifica se o CPF possui 11 números ou se todos são iguais:
-        if len(numbers) != 11 or len(set(numbers)) == 1:
-            return False
+        if len(set(numeros)) == 1:
+            raise exception
 
         # Validação do primeiro dígito verificador:
-        sum_of_products = sum(a*b for a, b in zip(numbers[0:9], range(10, 1, -1)))
-        expected_digit = (sum_of_products * 10 % 11) % 10
-        if numbers[9] != expected_digit:
-            return False
+        soma_dos_produtos = sum(a*b for a, b in zip(numeros[0:9], range(10, 1, -1)))
+        digito_esperado = (soma_dos_produtos * 10 % 11) % 10
+        if numeros[9] != digito_esperado:
+            raise exception
 
         # Validação do segundo dígito verificador:
-        sum_of_products = sum(a*b for a, b in zip(numbers[0:10], range(11, 1, -1)))
-        expected_digit = (sum_of_products * 10 % 11) % 10
-        if numbers[10] != expected_digit:
-            return False
-
-        return True
+        soma_dos_produtos = sum(a*b for a, b in zip(numeros[0:10], range(11, 1, -1)))
+        digito_esperado = (soma_dos_produtos * 10 % 11) % 10
+        if numeros[10] != digito_esperado:
+            raise exception
 
 class CelularValidator(AbstractValidator[str]):
-    def valida(value: str) -> bool:
-        return bool(re.match('^[1-9]{2}9[1-9][0-9]{3}[0-9]{4}$', value))
+    def valida(value: str, exception: Exception = None):
+        StringVaziaValidator.valida(value, exception=exception)
+        if bool(re.match('^[1-9]{2}9[1-9][0-9]{3}[0-9]{4}$', value)):
+            raise exception
 
 class SenhaValidator(AbstractValidator[str]):
-    def valida(value : str) -> bool:
+    def valida(value : str, exception: Exception = None):
+        StringVaziaValidator.valida(value, exception=exception)
         special_sym = ['$', '@', '#', '%']
 
         if (len(value) < 6 or len(value) > 20)\
@@ -49,8 +59,6 @@ class SenhaValidator(AbstractValidator[str]):
         or not any(char.isupper() for char in value)\
         or not any(char.islower() for char in value)\
         or not any(char in special_sym for char in value):
-            return False
-        
-        return True
+            raise exception
 
 

@@ -10,3 +10,4 @@ class TestEmail:
         assert not EmailValidator.valida("test@gmail.com@")
         assert not EmailValidator.valida("as")
         assert not EmailValidator.valida("test.com")
+        assert not EmailValidator.valida("")
