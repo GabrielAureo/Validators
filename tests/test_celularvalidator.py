@@ -1,17 +1,34 @@
+from contextlib import nullcontext as does_not_raise
+import pytest
 from src.transfero_validators.validators import CelularValidator
+from .exceptions.custom_test_exception import CustomTestException
 
 class TestCelular:
-    def test_celular_ok(self):
-        assert CelularValidator.valida("21964512232")
-        assert CelularValidator.valida("42929292929")
-        assert CelularValidator.valida("11999111999")
-        assert CelularValidator.valida("22912345678")
+    @pytest.mark.parametrize(
+    "value,exception,expectation",
+        [
+            ("21964512232", CustomTestException(), does_not_raise()),
+            ("42929292929", CustomTestException(), does_not_raise()),
+            ("11999111999", CustomTestException(), does_not_raise()),
+            ("22912345678", CustomTestException(), does_not_raise()),
+        ],
+    )
+    def test_celular_ok(self, value, exception, expectation):
+        with expectation:
+            CelularValidator.valida(value=value, exception=exception)
 
-    def test_celular_invalido(self):
-        assert not CelularValidator.valida("964512232")
-        assert not CelularValidator.valida("21778787878")
-        assert not CelularValidator.valida("12489")
-        assert not CelularValidator.valida("0000000000")
-        assert not CelularValidator.valida("")
-        assert not CelularValidator.valida("21904512232")
+    @pytest.mark.parametrize(
+    "value,exception,expectation",
+        [
+            ("964512232", CustomTestException(), pytest.raises(CustomTestException)),
+            ("21778787878", CustomTestException(), pytest.raises(CustomTestException)),
+            ("12489", CustomTestException(), pytest.raises(CustomTestException)),
+            ("0000000000", CustomTestException(), pytest.raises(CustomTestException)),
+            ("", CustomTestException(), pytest.raises(CustomTestException)),
+            ("21904512232", CustomTestException(), pytest.raises(CustomTestException))
+        ],
+    )
+    def test_celular_invalido(self, value, exception, expectation):
+        with expectation:
+            CelularValidator.valida(value=value, exception=exception)
 

@@ -6,22 +6,22 @@ import re
 T = TypeVar("T")
 class AbstractValidator(ABC, Generic[T]):
     @abstractmethod
-    def valida(value : T, exception : Exception = None) -> bool:
+    def valida(value : T, exception : BaseException = Exception()):
         pass
 
 class StringVaziaValidator(AbstractValidator[str]):
-    def valida(value: T, exception: Exception = None) -> bool:
+    def valida(value: T, exception: BaseException = Exception()):
         if(value == ""):
             raise exception
 
 class EmailValidator(AbstractValidator[str]):
-    def valida(value: str, exception: Exception = None) -> bool:
+    def valida(value: str, exception: BaseException):
         StringVaziaValidator.valida(value, exception=exception)
-        if bool(re.match(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", value)):
+        if not bool(re.match(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", value)):
             raise exception
 
 class CPFValidator(AbstractValidator[str]):
-    def valida(value: str, exception: Exception = None) -> bool:
+    def valida(value: str, exception: BaseException):
         StringVaziaValidator.valida(value, exception=exception)
         numeros = [int(digit) for digit in value if digit.isdigit()]
 
@@ -44,13 +44,13 @@ class CPFValidator(AbstractValidator[str]):
             raise exception
 
 class CelularValidator(AbstractValidator[str]):
-    def valida(value: str, exception: Exception = None):
+    def valida(value: str, exception: BaseException = None):
         StringVaziaValidator.valida(value, exception=exception)
-        if bool(re.match('^[1-9]{2}9[1-9][0-9]{3}[0-9]{4}$', value)):
+        if not bool(re.match('^[1-9]{2}9[1-9][0-9]{3}[0-9]{4}$', value)):
             raise exception
 
 class SenhaValidator(AbstractValidator[str]):
-    def valida(value : str, exception: Exception = None):
+    def valida(value : str, exception: BaseException = None):
         StringVaziaValidator.valida(value, exception=exception)
         special_sym = ['$', '@', '#', '%']
 

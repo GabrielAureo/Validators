@@ -1,0 +1,3 @@
+
+class CustomTestException(BaseException):
+    pass

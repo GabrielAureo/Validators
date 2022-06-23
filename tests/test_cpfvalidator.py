@@ -1,20 +1,37 @@
+import pytest
 from src.transfero_validators.validators import CPFValidator
+from contextlib import nullcontext as does_not_raise
+
+from .exceptions.custom_test_exception import CustomTestException
 
 class TestCPF:
-    def test_cpf_valid(self):
-        assert CPFValidator.valida("95640975091")
-        assert CPFValidator.valida("69133081085")
-        assert CPFValidator.valida("00891536000")
-        assert CPFValidator.valida("245.248.520-93")
+    @pytest.mark.parametrize(
+    "value,exception,expectation",
+        [
+            ("95640975091", CustomTestException(), does_not_raise()),
+            ("69133081085", CustomTestException(), does_not_raise()),
+            ("00891536000", CustomTestException(), does_not_raise()),
+            ("245.248.520-93", CustomTestException(), does_not_raise()),
+        ],
+    )
+    def test_cpf_valid(self,value,exception,expectation):
+        with expectation:
+            CPFValidator.valida(value=value, exception=exception)
         
-    
-    def test_cpf_invalid(self):
-        assert not CPFValidator.valida("11111111111")
-        assert not CPFValidator.valida("")
-        assert not CPFValidator.valida("99999999999")
-        assert not CPFValidator.valida("246.248.520-93")
-        assert not CPFValidator.valida("palavra")
-        assert not CPFValidator.valida("48587864598645796564")
-        assert not CPFValidator.valida("4564")
+    @pytest.mark.parametrize(
+        "value,exception,expectation",
+        [
+            ("11111111111", CustomTestException(), pytest.raises(CustomTestException)),
+            ("", CustomTestException(), pytest.raises(CustomTestException)),
+            ("99999999999", CustomTestException(), pytest.raises(CustomTestException)),
+            ("246.248.520-93", CustomTestException(), pytest.raises(CustomTestException)),
+            ("palavra", CustomTestException(), pytest.raises(CustomTestException)),
+            ("48587864598645796564", CustomTestException(), pytest.raises(CustomTestException)),
+            ("4564", CustomTestException(), pytest.raises(CustomTestException)),
+        ],
+    )
+    def test_cpf_invalid(self,value,exception,expectation):
+        with expectation:
+            CPFValidator.valida(value=value,exception=exception)
         
         
